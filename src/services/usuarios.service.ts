@@ -5,7 +5,7 @@ import { UsuarioResponse } from "@/types/usuarios/usuario.response";
 export class UsuariosService {
   public static async getUsuarios(): Promise<UsuarioResponse[]> {
     try {
-      const response = await apiClient.get<UsuarioResponse[]>("/usuarios");
+      const response = await apiClient.get<UsuarioResponse[]>("/usuario");
       return response.data;
     } catch (error) {
       throw new Error("Error recuperando el usuario");
@@ -17,7 +17,7 @@ export class UsuariosService {
   ): Promise<UsuarioResponse> {
     try {
       const response = await apiClient.post<UsuarioResponse>(
-        "/usuarios",
+        "/usuario",
         usuarioRequest
       );
       return response.data;
@@ -26,7 +26,24 @@ export class UsuariosService {
     }
   }
 
-  public static updateUsuario() {}
+  public static async updateUsuario(usuarioRequest: UsuarioRequest, id: number): Promise<UsuarioResponse> {
+    try {
+      const response = await apiClient.put<UsuarioResponse>(
+        `/usuario/${id}`,
+        usuarioRequest
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error("Error al actualizar el usuario");
+    }
+  }
 
-  public static deleteUsuario() {}
+  public static async deleteUsuario(id: number): Promise<void> {
+    try {
+      const response = await apiClient.delete<void>(`/usuario/${id}`)
+      return response.data
+    } catch (error) {
+      throw new Error("Error al borrar el usuario");
+    }
+  }
 }

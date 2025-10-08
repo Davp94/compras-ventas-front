@@ -25,9 +25,10 @@ import { ActionTypeEnum } from "@/constant/enum/action-type.enum";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import UsuariosView from "./view";
 import UsuariosForm from "./form";
+import { useUsuarios } from "@/hooks/useUsuario";
 
 export default function UsuariosHome() {
-  const [usuarios, setUsuarios] = useState<UsuarioResponse[]>([]);
+  const [usuarios, setUsuarios] = useState<any>([]);
   const [usuariosDialog, setUsuariosDialog] = useState<boolean>(false);
   const [usuario, setUsuario] = useState<UsuarioResponse | null>(null);
   const [submitted, setSubmitted] = useState<boolean>(false);
@@ -36,10 +37,11 @@ export default function UsuariosHome() {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<UsuarioResponse[]>>(null);
 
-  //TODO add hook || service
+  const { getUsuarios, deleteUsuario: deleteUser, loading } = useUsuarios();
 
   const initComponent = async () => {
-    const usuarios: UsuarioResponse[] = [];
+    const usuarios = await getUsuarios();
+    console.log('USUARIOS RESPONSE', usuarios);
     setUsuarios(usuarios);
   };
   useEffect(() => {
@@ -90,8 +92,8 @@ export default function UsuariosHome() {
     });
   };
 
-  const deleteUsuario = (usuario: UsuarioResponse) => {
-    //todo add delete usuario service
+  const deleteUsuario = async (usuario: UsuarioResponse) => {
+    await deleteUser(usuario.id);
     toast.current?.show({
       severity: "success",
       summary: "Successful",
@@ -267,10 +269,10 @@ export default function UsuariosHome() {
         className="p-fluid"
         onHide={hideDialog}
       >
-        {flagAction == ActionTypeEnum.READ && <UsuariosView />}
+        {flagAction == ActionTypeEnum.READ && <UsuariosView usuario={usuario} hideDialog={hideDialog}/>}
         {[ActionTypeEnum.CREATE, ActionTypeEnum.UPDATE].includes(
           flagAction
-        ) && <UsuariosForm />}
+        ) && <UsuariosForm usuario={usuario} flagAction={flagAction} toast={toast} hideDialog={hideDialog}/>}
       </Dialog>
       <ConfirmDialog />
     </div>
