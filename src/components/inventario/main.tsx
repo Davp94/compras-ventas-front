@@ -1,34 +1,25 @@
 "use client";
 
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
-import { classNames } from "primereact/utils";
-import { DataTable } from "primereact/datatable";
+import { DataTable, DataTablePageEvent, DataTableSortEvent } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
 import { Toolbar } from "primereact/toolbar";
 import { InputTextarea } from "primereact/inputtextarea";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import {
-  InputNumber,
-  InputNumberValueChangeEvent,
-} from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
-import { UsuarioResponse } from "@/types/usuarios/usuario.response";
 import { ActionTypeEnum } from "@/constant/enum/action-type.enum";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import { useUsuarios } from "@/hooks/useUsuario";
+import { ConfirmDialog } from "primereact/confirmdialog";
 import { useRouter } from "next/navigation";
 import { useInventario } from "@/hooks/useInventario";
 import { SucursalResponse } from "@/types/inventario/sucursal.response";
 import { AlmacenResponse } from "@/types/inventario/almacen.response";
 import { ProductosResponse } from "@/types/inventario/productos.response";
+import { Dropdown } from "primereact/dropdown";
+import ProductosForm from "./form";
 
 export default function InventarioMain() {
   const [productos, setProductos] = useState<ProductosResponse[] | undefined>([]);
@@ -128,6 +119,22 @@ export default function InventarioMain() {
     fetchProductos();
   }, [selectedAlmacen, lazyState, globalFilter]);
 
+  const onPageChange = (event: DataTablePageEvent) => {
+    setLazyState({
+      ...lazyState,
+      pageNumber: event.page ? event.page + 1 : 1,
+      pageSize: event.rows
+    })
+  }
+
+  const onSort = (event: DataTableSortEvent) => {
+    setLazyState({
+      ...lazyState,
+      sortField: event.sortField,
+      sortOrder: event.sortOrder === 1 ? 'ASC' : 'DESC'
+    })
+  }
+
   const openNew = () => {
     setFlagAction(ActionTypeEnum.CREATE);
     setSubmitted(false);
@@ -155,6 +162,12 @@ export default function InventarioMain() {
           severity="success"
           onClick={openNew}
         />
+        <Button
+          label="Stock"
+          icon="pi pi-plus"
+          severity="info"
+          onClick={() => router.push(`nueva-nota?tipo=COMPRA&almacenId=${selectedAlmacen?.id}`)}
+        />
       </div>
     );
   };
@@ -170,11 +183,7 @@ export default function InventarioMain() {
     );
   };
 
-  const statusBodyTemplate = (rowData: UsuarioResponse) => {
-    return <Tag value={rowData.estado} severity={getSeverity(rowData)}></Tag>;
-  };
-
-  const actionBodyTemplate = (rowData: UsuarioResponse) => {
+  const actionBodyTemplate = (rowData: ProductosResponse) => {
     return (
       <>
         <Button
@@ -182,7 +191,7 @@ export default function InventarioMain() {
           rounded
           outlined
           className="mr-2"
-          onClick={() => editUsuario(rowData)}
+          onClick={() => console.log('')}
         />
         <Button
           icon="pi pi-eye"
@@ -190,35 +199,38 @@ export default function InventarioMain() {
           outlined
           className="mr-2"
           severity="info"
-          onClick={() => viewUsuario(rowData)}
+          onClick={() => console.log('')}
         />
         <Button
           icon="pi pi-trash"
           rounded
           outlined
           severity="danger"
-          onClick={() => confirmDeleteProduct(rowData)}
+          onClick={() => console.log('')}
         />
       </>
     );
   };
 
-  const getSeverity = (rowDAta: UsuarioResponse) => {
-    switch (rowDAta.estado) {
-      case "INACTIVO":
-        return "danger";
-      case "ACTIVO":
-        return "success";
-      case "OBSERVADO":
-        return "warning";
-      default:
-        return null;
-    }
-  };
-
   const header = (
     <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-      <h4 className="m-0">Manage Usuarios</h4>
+      <h4 className="m-0">Manage Inventario</h4>
+      <Dropdown 
+        value={selectedSucursal}
+        onChange={(e) => setSelectedSucursal(e.value)}
+        options={sucursales}
+        optionLabel="nombre"
+        placeholder="Seleccione una sucursal"
+        className="w-full md:w-14rem"
+      />
+      <Dropdown 
+        value={selectedAlmacen}
+        onChange={(e) => setSelectedAlmacen(e.value)}
+        options={almacenes}
+        optionLabel="nombre"
+        placeholder="Seleccione un almacen"
+        className="w-full md:w-14rem"
+      />
       <IconField iconPosition="left">
         <InputIcon className="pi pi-search" />
         <InputText
@@ -245,50 +257,49 @@ export default function InventarioMain() {
 
         <DataTable
           ref={dt}
-          value={usuarios}
+          value={productos}
           dataKey="id"
           paginator
-          rows={10}
-          rowsPerPageOptions={[5, 10, 25]}
+          rows={lazyState.pageSize}
+          rowsPerPageOptions={[10, 20, 50]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
           globalFilter={globalFilter}
           header={header}
+          lazy
+          totalRecords={totalRecords}
+          onPage={onPageChange}
+          onSort={onSort}
+          sortField={lazyState.sortField}
+          sortOrder={lazyState.sortOrder === 'ASC' ? 1 : -1}
         >
           <Column
-            field="nombres"
-            header="Nombres"
+            field="nombre"
+            header="Nombre"
             sortable
             style={{ minWidth: "12rem" }}
           ></Column>
           <Column
-            field="apellidos"
-            header="Apellidos"
+            field="codigoBarra"
+            header="Codigo Barra"
             sortable
             style={{ minWidth: "12rem" }}
           ></Column>
           <Column
-            field="correo"
-            header="Correo"
+            field="marca"
+            header="Marca"
             sortable
             style={{ minWidth: "12rem" }}
           ></Column>
           <Column
-            field="telefono"
-            header="Telefono"
+            field="nombreCategoria"
+            header="Categoria"
             sortable
             style={{ minWidth: "10rem" }}
           ></Column>
           <Column
-            field="documentoIdentidad"
-            header="Documento Identidad"
-            sortable
-            style={{ minWidth: "10rem" }}
-          ></Column>
-          <Column
-            field="estado"
-            header="Estado"
-            body={statusBodyTemplate}
+            field="precio"
+            header="Precio"
             sortable
             style={{ minWidth: "10rem" }}
           ></Column>
@@ -301,19 +312,17 @@ export default function InventarioMain() {
       </div>
 
       <Dialog
-        visible={usuariosDialog}
+        visible={productosDialog}
         style={{ width: "60vw" }}
-        header="Product Details"
+        header="Productos Almacen Form"
         modal
         className="p-fluid"
         onHide={hideDialog}
       >
-        {flagAction == ActionTypeEnum.READ && <UsuariosView usuario={usuario} hideDialog={hideDialog}/>}
         {[ActionTypeEnum.CREATE, ActionTypeEnum.UPDATE].includes(
           flagAction
-        ) && <UsuariosForm usuario={usuario} flagAction={flagAction} toast={toast} hideDialog={hideDialog}/>}
+        ) && <ProductosForm />}
       </Dialog>
-      <ConfirmDialog />
     </div>
   );
 }
