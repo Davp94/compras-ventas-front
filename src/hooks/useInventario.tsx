@@ -1,4 +1,3 @@
-
 import { InventarioService } from "@/services/inventario.service";
 import { useState } from "react";
 
@@ -11,6 +10,22 @@ export const useInventario = () => {
     setError("");
     try {
       const response = await InventarioService.getProductos(params);
+      return response;
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+        throw error;
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getProductosAlmacen = async (almacenId: number) => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await InventarioService.getProductosAlmacen(almacenId);
       return response;
     } catch (error) {
       if (error instanceof Error) {
@@ -38,7 +53,7 @@ export const useInventario = () => {
     }
   };
 
-    const getAlmacenes = async (sucursalId: number) => {
+  const getAlmacenes = async (sucursalId: number) => {
     setLoading(true);
     setError("");
     try {
@@ -52,13 +67,14 @@ export const useInventario = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return {
     getProductosPagination,
+    getProductosAlmacen,
     getSucursales,
     getAlmacenes,
     loading,
-    error
-  }
+    error,
+  };
 };

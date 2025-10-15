@@ -34,6 +34,15 @@ export class InventarioService {
         }
     }
 
+    public static async getProductosAlmacen(almacenId: number): Promise<ProductosResponse[]>{
+         try {
+            const response = await apiClient.get<ProductosResponse[]>(`/productos/almacen/${almacenId}`);
+            return response.data;
+        } catch (error) {
+            throw new Error('Error al obtener productos');
+        }
+    }
+
     public static async getSucursales(): Promise<SucursalResponse[]>{
         try {
             const response = await apiClient.get<SucursalResponse[]>('/sucursal');

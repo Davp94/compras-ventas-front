@@ -26,9 +26,11 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { useUsuarios } from "@/hooks/useUsuario";
 import { RolesResponse } from "@/types/roles/roles.response";
 import { useRol } from "@/hooks/useRol";
+import RolesForm from "./form";
+import RolesView from "./view";
 
 export default function RolesHome() {
-  const [roles, setRoles] = useState<RolesResponse[]>([]);
+  const [roles, setRoles] = useState<RolesResponse[] | undefined>([]);
   const [roleDialog, setRolesDialog] = useState<boolean>(false);
   const [rol, setRol] = useState<RolesResponse | null>(null);
   const [submitted, setSubmitted] = useState<boolean>(false);
@@ -38,7 +40,7 @@ export default function RolesHome() {
   const dt = useRef<DataTable<RolesResponse[]>>(null);
 
   //TODO add hook Roles
-  const { getRoles } = useRol();
+  const { getRoles, deleteRol: deleteRolF  } = useRol();
 
   const initComponent = async () => {
     const roles = await getRoles();
@@ -227,10 +229,19 @@ export default function RolesHome() {
         className="p-fluid"
         onHide={hideDialog}
       >
-        {flagAction == ActionTypeEnum.READ && <UsuariosView usuario={usuario} hideDialog={hideDialog}/>}
+        {flagAction == ActionTypeEnum.READ && (
+          <RolesView rol={rol} hideDialog={hideDialog} />
+        )}
         {[ActionTypeEnum.CREATE, ActionTypeEnum.UPDATE].includes(
           flagAction
-        ) && <UsuariosForm usuario={usuario} flagAction={flagAction} toast={toast} hideDialog={hideDialog}/>}
+        ) && (
+          <RolesForm
+            rolId={rol ? rol.id : null}
+            flagAction={flagAction}
+            toast={toast}
+            hideDialog={hideDialog}
+          />
+        )}
       </Dialog>
       <ConfirmDialog />
     </div>
