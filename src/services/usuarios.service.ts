@@ -12,6 +12,15 @@ export class UsuariosService {
     }
   }
 
+    public static async getUsuarioById(id: number): Promise<UsuarioResponse> {
+    try {
+      const response = await apiClient.get<UsuarioResponse>(`/usuario/${id}`);
+      return response.data;
+    } catch (error) {
+      throw new Error("Error recuperando el usuario");
+    }
+  }
+
   public static async createUsuario(
     usuarioRequest: UsuarioRequest
   ): Promise<UsuarioResponse> {

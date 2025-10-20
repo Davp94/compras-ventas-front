@@ -22,6 +22,22 @@ export const useUsuarios = () => {
     }
   };
 
+  const getUsuarioById = async (id: number) => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await UsuariosService.getUsuarioById(id);
+      return response;
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+        throw error;
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const createUsuario = async (usuarioRequest: UsuarioRequest) => {
     setLoading(true);
     setError("");
@@ -74,6 +90,7 @@ export const useUsuarios = () => {
     getUsuarios,
     createUsuario,
     updateUsuario,
+    getUsuarioById,
     deleteUsuario,
     loading,
     error

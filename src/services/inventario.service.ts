@@ -5,7 +5,7 @@ import { SucursalResponse } from "@/types/inventario/sucursal.response";
 import { PaginationResponse } from "@/types/paginacion/pagination.response";
 
 export class InventarioService {
-
+    static PATH: any = '/producto';
     public static async getProductos(params: {
         pageNumber?: number;
         pageSize?: number;
@@ -36,7 +36,7 @@ export class InventarioService {
 
     public static async getProductosAlmacen(almacenId: number): Promise<ProductosResponse[]>{
          try {
-            const response = await apiClient.get<ProductosResponse[]>(`/productos/almacen/${almacenId}`);
+            const response = await apiClient.get<ProductosResponse[]>(`${this.PATH}/almacen/${almacenId}`);
             return response.data;
         } catch (error) {
             throw new Error('Error al obtener productos');
@@ -55,7 +55,7 @@ export class InventarioService {
 
     public static async getAlmacenes(sucursalId: number): Promise<AlmacenResponse[]>{
         try {
-            const response = await apiClient.get<AlmacenResponse[]>('/sucursal/almacen');
+            const response = await apiClient.get<AlmacenResponse[]>(`/sucursal/almacen/${sucursalId}`);
             return response.data;
         } catch (error) {
             throw new Error('Error al obtener los almacenes');

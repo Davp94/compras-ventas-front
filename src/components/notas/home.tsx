@@ -20,12 +20,8 @@ import {
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Tag } from "primereact/tag";
-import { UsuarioResponse } from "@/types/usuarios/usuario.response";
-import { ActionTypeEnum } from "@/constant/enum/action-type.enum";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import { useUsuarios } from "@/hooks/useUsuario";
 import { NotaResponse } from "@/types/notas/nota.response";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useNota } from "@/hooks/useNota";
 
 export default function NotasHome() {

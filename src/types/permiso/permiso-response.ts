@@ -1,6 +1,6 @@
 export interface PermisoResponse{
   id: number;  
-  nombre: string;
-  descripcion: string;
+  name: string;
+  resource: string;
   action: string;
 }

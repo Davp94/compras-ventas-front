@@ -1,5 +1,5 @@
 export interface PermisoRequest {
-  nombre: string;
-  descripcion: string;
+  name: string;
+  resource: string;
   action?: string;
 }

@@ -4,7 +4,7 @@ import { Control, Controller, RegisterOptions } from "react-hook-form";
 interface InputControllerProps {
   name: string;
   control: Control<any>;
-  rules: RegisterOptions;
+  rules: RegisterOptions | null;
   label?: string;
   placeholder?: string;
   icon?: string;
@@ -22,7 +22,7 @@ export default function InputController({
     <Controller
       name={name}
       control={control}
-      rules={rules}
+      rules={rules ? rules : undefined}
       render={({ field, fieldState }) => (
         <>
           <InputText

@@ -13,6 +13,7 @@ export class AuthService {
       );
       Cookies.set("token", response.data.token);
       Cookies.set("refresh-token", response.data.refreshToken);
+      Cookies.set("identifier", response.data.identifier+"");
       Cookies.set("expiration", response.data.expiration + "");
       return response.data;
     } catch (error) {
@@ -24,6 +25,7 @@ export class AuthService {
     try {
       Cookies.remove("token");
       Cookies.remove("refresh-token");
+      Cookies.remove("identifier");
       Cookies.remove("expiration");
     } catch (error) {
       console.log("Error", error);

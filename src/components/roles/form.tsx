@@ -154,7 +154,7 @@ export default function RolesForm({
               value={permisosRol}
               onChange={(e) => setPermisosRol(e.value)}
               options={permisos}
-              optionLabel="nombre"
+              optionLabel="name"
               placeholder="Selecciones permisos para el rol"
               maxSelectedLabels={3}
               className="w-full md:w-20rem"
@@ -173,7 +173,7 @@ export default function RolesForm({
               <h2>Permisos Seleccionados:</h2>
             
             {permisosRol.map((permisoRol: PermisoResponse) => (
-              <label key={permisoRol.id}>{permisoRol.nombre} -</label>
+              <label key={permisoRol.id}>{permisoRol.name} -</label>
             ))}
             </div>
           )}

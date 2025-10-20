@@ -5,5 +5,5 @@ export interface ProductosResponse {
     codigoBarra: string;
     marca: string;
     nombreCategoria: string;
-    precioVenta: number;
+    precioVentaActual: number;
 }

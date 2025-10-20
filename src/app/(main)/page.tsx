@@ -1,11 +1,9 @@
-import Image from "next/image";
-import { Button } from "primereact/button";
+import Home from "@/components/common/home";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <>
-    <Button  label="BUTTON HOME" severity="warning"/>
-    <label className="text-4xl underline">My Label</label>
+      <Home />
     </>
   );
 }

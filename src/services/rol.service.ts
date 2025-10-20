@@ -16,7 +16,7 @@ export class RolService {
 
   public static async getRolById(id: number): Promise<RolesResponse> {
     try {
-      const response = await apiClient.get<RolesResponse>(`/roles/${id}`);
+      const response = await apiClient.get<RolesResponse>(`/rol/${id}`);
       return response.data;
     } catch (error) {
       throw new Error("Error obtener roles");
@@ -28,7 +28,7 @@ export class RolService {
   ): Promise<RolesResponse> {
     try {
       const response = await apiClient.post<RolesResponse>(
-        "/roles",
+        "/rol",
         rolRequest
       );
       return response.data;
@@ -43,7 +43,7 @@ export class RolService {
   ): Promise<RolesResponse> {
     try {
       const response = await apiClient.put<RolesResponse>(
-        `/roles/${id}`,
+        `/rol/${id}`,
         rolRequest
       );
       return response.data;
@@ -55,7 +55,7 @@ export class RolService {
   public static async getpermisos(): Promise<PermisoResponse[]> {
     try {
       const response = await apiClient.get<PermisoResponse[]>(
-        "/roles/permisos"
+        "/permiso"
       );
       return response.data;
     } catch (error) {
@@ -68,7 +68,7 @@ export class RolService {
   ): Promise<PermisoResponse> {
     try {
       const response = await apiClient.post<PermisoResponse>(
-        "/roles/permiso",
+        "/permiso",
         permisoRequest
       );
       return response.data;

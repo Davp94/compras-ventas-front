@@ -19,8 +19,8 @@ export default function PermisosForm({ hideDrawer, toast }: PermisosFormPros) {
     getValues,
   } = useForm({
     defaultValues: {
-      nombre: "",
-      descripcion: "",
+      name: "",
+      resource: "",
     },
   });
 
@@ -58,7 +58,7 @@ export default function PermisosForm({ hideDrawer, toast }: PermisosFormPros) {
         <div className="grid grid-cols-1 p-fluid gap-4 mb-4">
           <div className="">
             <InputController
-              name="nombre"
+              name="name"
               control={control}
               rules={{
                 required: "Nombre es requerido",
@@ -69,7 +69,7 @@ export default function PermisosForm({ hideDrawer, toast }: PermisosFormPros) {
           </div>
           <div className="">
             <InputController
-              name="descripcion"
+              name="resource"
               control={control}
               rules={{
                 required: "descripcion es requerido",

@@ -41,7 +41,7 @@ export default function UsuariosHome() {
 
   const initComponent = async () => {
     const usuarios = await getUsuarios();
-    console.log('USUARIOS RESPONSE', usuarios);
+    console.log("USUARIOS RESPONSE", usuarios);
     setUsuarios(usuarios);
   };
   useEffect(() => {
@@ -205,6 +205,7 @@ export default function UsuariosHome() {
         ></Toolbar>
 
         <DataTable
+          key={"table-users"}
           ref={dt}
           value={usuarios}
           dataKey="id"
@@ -269,10 +270,19 @@ export default function UsuariosHome() {
         className="p-fluid"
         onHide={hideDialog}
       >
-        {flagAction == ActionTypeEnum.READ && <UsuariosView usuario={usuario} hideDialog={hideDialog}/>}
+        {flagAction == ActionTypeEnum.READ && (
+          <UsuariosView usuario={usuario} hideDialog={hideDialog} />
+        )}
         {[ActionTypeEnum.CREATE, ActionTypeEnum.UPDATE].includes(
           flagAction
-        ) && <UsuariosForm usuario={usuario} flagAction={flagAction} toast={toast} hideDialog={hideDialog}/>}
+        ) && (
+          <UsuariosForm
+            usuario={usuario}
+            flagAction={flagAction}
+            toast={toast}
+            hideDialog={hideDialog}
+          />
+        )}
       </Dialog>
       <ConfirmDialog />
     </div>
